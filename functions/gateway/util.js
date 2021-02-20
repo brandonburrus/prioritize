@@ -26,6 +26,7 @@ function authCheck(req, log) {
         if (err) {
           reject(err);
         }
+        log.debug("Verified and decoded user token", { token: decoded });
         resolve(decoded);
       });
     });
@@ -34,7 +35,8 @@ function authCheck(req, log) {
 }
 
 // Auth token generation
-function createToken(body) {
+function createToken(body, log) {
+  log.debug("Creating JWT...", { tokenInfo: body });
   return jwt.sign(body, process.env.JWT_SECRET, {
     expiresIn: process.env.JWT_EXPIRATION || "24h",
   });

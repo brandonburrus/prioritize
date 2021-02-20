@@ -53,6 +53,7 @@ module.exports.handler = async function (event, ctx) {
     log.http(notFoundRes, { type: "response" });
     return notFoundRes;
   } catch (err) {
+    log.error(err);
     const errorRes = responseFactory(
       {
         status: 500,

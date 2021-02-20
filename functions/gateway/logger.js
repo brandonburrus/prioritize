@@ -48,6 +48,12 @@ const consoleTransport = new winston.transports.Console({
       msg += chalk.grey(" :: ");
       if (typeof message === "string") {
         msg += chalk.white(message);
+        if (meta) {
+          // eslint-disable-next-line no-unused-vars
+          const { transactionId, ...restMeta } = meta;
+          msg += chalk.grey(" :: ");
+          msg += chalk.white(JSON.stringify(restMeta, null, 2));
+        }
       } else if (meta.httpMethod && meta.path) {
         const { httpMethod: method, path } = meta;
         switch (method) {
@@ -68,16 +74,15 @@ const consoleTransport = new winston.transports.Console({
             break;
         }
         msg += chalk.white(" " + path);
-        msg += "\n";
         const { params, query, headers } = message;
         if (params) {
-          msg += chalk.grey("\tPARAMS :: ") + JSON.stringify(params) + "\n";
+          msg += chalk.grey("\n\tPARAMS :: ") + JSON.stringify(params);
         }
         if (query) {
-          msg += chalk.grey("\tQUERY :: ") + JSON.stringify(query) + "\n";
+          msg += chalk.grey("\n\tQUERY :: ") + JSON.stringify(query);
         }
         if (headers) {
-          msg += chalk.grey("\tHEADERS :: ") + JSON.stringify(headers) + "\n";
+          msg += chalk.grey("\n\tHEADERS :: ") + JSON.stringify(headers);
         }
       } else {
         msg += chalk.white(JSON.stringify(message, null, 2));

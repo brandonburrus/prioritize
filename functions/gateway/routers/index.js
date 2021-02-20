@@ -1,4 +1,5 @@
 const authRouters = require("./auth");
-const firestoreRouters = require("./firestore");
+const priorityRouters = require("./priorities");
+const preferenceRouters = require("./preferences");
 
-module.exports = [...authRouters, ...firestoreRouters];
+module.exports = [...authRouters, ...priorityRouters, ...preferenceRouters];
