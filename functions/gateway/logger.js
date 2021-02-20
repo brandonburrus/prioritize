@@ -3,6 +3,7 @@ const chalk = require("chalk");
 const isProd = process.env.NODE_ENV === "production";
 
 const papertrailTransport = new winston.transports.Http({
+  level: process.env.LOG_LEVEL || "debug",
   host: "logs.collector.solarwinds.com",
   path: "/v1/log",
   auth: {
