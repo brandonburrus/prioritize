@@ -1,6 +1,6 @@
 const firebase = require("firebase");
-require("dotenv").config();
 
+// Firebase configuration
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
   authDomain: process.env.FIREBASE_AUTH_DOMAIN,
@@ -10,6 +10,12 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+require("firebase/auth");
+require("firebase/auth");
+
 module.exports = {
   firebaseConfig,
+  firebase,
 };
