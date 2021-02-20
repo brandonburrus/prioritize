@@ -4,13 +4,17 @@ const { v4: transId } = require("uuid");
 
 const routers = [...firestoreRouters];
 
-function responseFactory(res) {
+/**
+ * TODO: Add documentation
+ */
+function responseFactory(res, transId) {
   const { headers = {}, body = {}, ...rest } = res;
   const status = rest.status || body.status || 200;
   return {
     statusCode: status,
     headers: {
       "Content-Type": headers["Content-Type"] || "application/json",
+      "x-transaction-id": transId,
       ...headers,
     },
     body:
@@ -31,24 +35,30 @@ module.exports.handler = async function (event, ctx) {
     for (const router of routers) {
       const routerResult = router.handle(event, log, ctx);
       if (routerResult) {
-        const res = responseFactory(routerResult);
+        const res = responseFactory(routerResult, transactionId);
         log.http(res, { type: "response" });
         return res;
       }
     }
-    const notFoundRes = responseFactory({
-      status: 404,
-      error: {
-        msg: "Not Found",
+    const notFoundRes = responseFactory(
+      {
+        status: 404,
+        error: {
+          msg: "Not Found",
+        },
       },
-    });
+      transactionId
+    );
     log.http(notFoundRes, { type: "response" });
     return notFoundRes;
   } catch (err) {
-    const errorRes = responseFactory({
-      status: 500,
-      err,
-    });
+    const errorRes = responseFactory(
+      {
+        status: 500,
+        err,
+      },
+      transactionId
+    );
     log.http(errorRes, { type: "response" });
     return errorRes;
   }
