@@ -9,7 +9,8 @@
   "private": true,
   "scripts": {
     "dev": "netlify dev",
-    "build": "rimraf .cache build && parcel build public/index.html --out-dir build --log-level 4",
+    "clean": "rimraf .cache build",
+    "build": "parcel build public/index.html --out-dir build --log-level 4",
     "lint": "prettier --check src && eslint --fix"
   },
   "dependencies": {
