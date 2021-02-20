@@ -1,0 +1,16 @@
+[build]
+  publish = "build"
+  command = "yarn build"
+  functions = "functions"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 301
+
+[dev]
+  framework = "#custom"
+  command = "parcel serve ./public/index.html -p 3001"
+  publish = "public"
+  targetPort = 3001
+  port = 3000
