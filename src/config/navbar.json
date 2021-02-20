@@ -1,0 +1,8 @@
+{
+  "links": {
+    "home": {
+      "name": "Priorities",
+      "route": "/"
+    }
+  }
+}
