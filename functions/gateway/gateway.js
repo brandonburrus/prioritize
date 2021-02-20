@@ -1,8 +1,6 @@
-const firestoreRouters = require("./firestore");
 const logger = require("./logger");
+const routers = require("./routers");
 const { v4: transId } = require("uuid");
-
-const routers = [...firestoreRouters];
 
 /**
  * TODO: Add documentation
@@ -33,7 +31,10 @@ module.exports.handler = async function (event, ctx) {
   const log = logger.child({ transactionId });
   try {
     for (const router of routers) {
-      const routerResult = router.handle(event, log, ctx);
+      let routerResult = router.handle(event, log, ctx);
+      if (routerResult instanceof Promise) {
+        routerResult = await routerResult;
+      }
       if (routerResult) {
         const res = responseFactory(routerResult, transactionId);
         log.http(res, { type: "response" });

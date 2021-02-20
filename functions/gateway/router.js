@@ -1,6 +1,6 @@
 const Route = require("route-parser");
 
-const ROUTE_BASE = "/api/gateway";
+const ROUTE_BASE = "/api";
 
 /**
  * TODO: Add documentation
@@ -47,6 +47,8 @@ class Router {
       httpMethod,
       queryStringParameters,
       multiValueQueryStringParameters,
+      headers,
+      body,
       ...restEvent
     } = event;
     const matchedRouting = this.getRouteHandler().match(path);
@@ -56,6 +58,11 @@ class Router {
         params: matchedRouting,
         query: queryStringParameters,
         multiValueQuery: multiValueQueryStringParameters,
+        headers,
+        body:
+          headers["content-type"] === "application/json"
+            ? JSON.parse(body)
+            : body,
         ...restEvent,
       };
       log.http(handlerInput, { type: "request", path, httpMethod });
