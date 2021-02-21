@@ -8,8 +8,14 @@ import { v4 as id } from "uuid";
 const action = actionName =>
   createAction(Symbol(actionName), payloadInput => ({
     payload: {
-      ...payloadInput,
       transId: id(),
+      ...(typeof payloadInput !== "undefined"
+        ? typeof payloadInput === "object"
+          ? payloadInput
+          : {
+              value: payloadInput,
+            }
+        : {}),
     },
   }));
 
@@ -17,12 +23,24 @@ const action = actionName =>
  * Auth actions
  */
 export const auth = {
-  signup: action("AUTH/signup"),
-  login: action("AUTH/login"),
+  signupStart: action("AUTH/signupStart"),
+  signupSuccess: action("AUTH/signupSuccess"),
+  signupFail: action("AUTH/signupFail"),
+  loginStart: action("AUTH/loginStart"),
+  loginSuccess: action("AUTH/loginSuccess"),
+  loginFail: action("AUTH/loginFail"),
   logout: action("AUTH/logout"),
+  tokenCheck: action("AUTH/tokenCheck"),
+  storeToken: action("AUTH/storeToken"),
+  deleteToken: action("AUTH/deleteToken"),
 };
 
 /**
  * Priority actions
  */
 export const priority = {};
+
+/**
+ * Preferences actions
+ */
+export const preferences = {};

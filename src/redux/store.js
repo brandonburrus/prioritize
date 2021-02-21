@@ -4,6 +4,7 @@ import { createEpicMiddleware } from "redux-observable";
 import reducer from "./reducers";
 import epics from "./epics";
 import thunk from "redux-thunk";
+import { auth } from "./actions";
 
 /**
  * Redux-logger configuration
@@ -30,5 +31,6 @@ const reduxStore = configureStore({
 });
 
 epicHandler.run(epics);
+reduxStore.dispatch(auth.tokenCheck());
 
 export default reduxStore;

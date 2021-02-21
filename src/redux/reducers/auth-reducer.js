@@ -8,6 +8,28 @@ import { auth } from "../actions";
 const INIT_STATE = {
   userId: null,
   email: null,
+  loginInflight: false,
+  signupInflight: false,
 };
 
-export default createReducer(INIT_STATE, $ => $);
+/**
+ * TODO: Add documentation
+ */
+export default createReducer(INIT_STATE, builder => {
+  builder
+    .addCase(auth.storeToken, (_state, action) => {
+      return {
+        userId: action.payload.userId,
+        email: action.payload.email,
+      };
+    })
+    .addCase(auth.loginStart, state => {
+      state.loginInflight = true;
+    })
+    .addCase(auth.loginSuccess, state => {
+      state.loginInflight = false;
+    })
+    .addCase(auth.loginFail, state => {
+      state.loginInflight = false;
+    });
+});

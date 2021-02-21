@@ -1,0 +1,6 @@
+{
+  "routes": {
+    "SIGN_IN": "/api/auth/signin",
+    "LOG_IN": "/api/auth/login"
+  }
+}
