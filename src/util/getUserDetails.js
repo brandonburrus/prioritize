@@ -2,7 +2,7 @@ import authConfig from "../config/auth.json";
 import jwt from "jsonwebtoken";
 
 /**
- * TODO: Add documentation
+ * Fetches the user JWT from storage and returns the decoded token
  */
 function getUserDetails() {
   let token = window.sessionStorage.getItem(authConfig.AUTH_STORAGE_KEY);

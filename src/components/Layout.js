@@ -6,12 +6,12 @@ import { Container, Box, Flex } from "@chakra-ui/react";
 /**
  * Primary app layout component
  */
-function Layout({ children }) {
+function Layout({ fill = false, topRightAdornment, children }) {
   return (
     <Box h="100vh" w="100vw" overflow="scroll" bg="gray.50">
       <Flex minH="calc(100vh - 52px)" flexDirection="column">
-        <Navbar />
-        <Container flexGrow={1}>{children}</Container>
+        <Navbar topRightAdornment={topRightAdornment} />
+        {fill ? children : <Container flexGrow={1}>{children}</Container>}
       </Flex>
       <Footer minH="52px" />
     </Box>

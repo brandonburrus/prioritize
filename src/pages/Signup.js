@@ -11,13 +11,18 @@ import {
   Input,
   Stack,
   Text,
+  chakra,
 } from "@chakra-ui/react";
 import { useFormik } from "formik";
 import { useNavigate } from "@reach/router";
 import { useSelector, useDispatch } from "react-redux";
+import Layout from "../components/Layout";
+import routes from "../config/routes.json";
+import { IoLogInOutline as LoginIcon } from "react-icons/io5";
 import * as Yup from "yup";
 import * as actions from "../redux/actions";
-import routes from "../config/routes.json";
+
+const ChakraLoginIcon = chakra(LoginIcon);
 
 const signupFormSignup = Yup.object().shape({
   email: Yup.string()
@@ -81,71 +86,82 @@ function Signup() {
   }, [signupErr]);
 
   return (
-    <Center w="100vw" h="100vh" bg="gray.100">
-      <form onSubmit={handleSubmit}>
-        <Stack
-          bg="gray.50"
-          borderRadius="20px"
-          border="1px solid"
-          borderColor="gray.200"
-          minW="40ch"
-          spacing="12px"
-          p="24px"
-        >
-          <Heading size="lg" pb="7px">
-            Sign up
-          </Heading>
-          <Divider />
-          <FormControl isInvalid={errors.email && touched.email}>
-            <FormLabel>Email</FormLabel>
-            <Input
-              type="email"
-              name="email"
-              autoComplete="username"
-              value={values.email}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            <FormErrorMessage>{errors.email}</FormErrorMessage>
-          </FormControl>
-          <FormControl isInvalid={errors.password && touched.password}>
-            <FormLabel>Password</FormLabel>
-            <Input
-              type="password"
-              name="password"
-              autoComplete="current-password"
-              value={values.password}
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            <FormErrorMessage>{errors.password}</FormErrorMessage>
-          </FormControl>
-          {signupErr && signupErrMsg && (
-            <Text fontSize="sm" color="red.500">
-              {signupErrMsg}
-            </Text>
-          )}
-          <Stack direction="row" justify="flex-end">
-            <Button
-              colorScheme="blue"
-              variant="ghost"
-              onClick={() => navigate(routes.LOG_IN)}
-            >
-              Login to your account
-            </Button>
-            <Button
-              type="submit"
-              minW="10ch"
-              colorScheme="blue"
-              disabled={isSubmitting || isSigningUp}
-              isLoading={isSubmitting || isSigningUp}
-            >
+    <Layout
+      fill
+      topRightAdornment={
+        <Button variant="ghost" colorScheme="blue">
+          Login
+          <ChakraLoginIcon w="28px" h="28px" ml="5px" />
+        </Button>
+      }
+    >
+      <Center flexGrow={1} bg="gray.100">
+        <form onSubmit={handleSubmit}>
+          <Stack
+            bg="gray.50"
+            borderRadius="20px"
+            border="1px solid"
+            borderColor="gray.200"
+            minW="40ch"
+            spacing="12px"
+            p="24px"
+            m="24px"
+          >
+            <Heading size="lg" pb="7px">
               Sign up
-            </Button>
+            </Heading>
+            <Divider />
+            <FormControl isInvalid={errors.email && touched.email}>
+              <FormLabel>Email</FormLabel>
+              <Input
+                type="email"
+                name="email"
+                autoComplete="username"
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <FormErrorMessage>{errors.email}</FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={errors.password && touched.password}>
+              <FormLabel>Password</FormLabel>
+              <Input
+                type="password"
+                name="password"
+                autoComplete="current-password"
+                value={values.password}
+                onChange={handleChange}
+                onBlur={handleBlur}
+              />
+              <FormErrorMessage>{errors.password}</FormErrorMessage>
+            </FormControl>
+            {signupErr && signupErrMsg && (
+              <Text fontSize="sm" color="red.500">
+                {signupErrMsg}
+              </Text>
+            )}
+            <Stack direction="row" justify="flex-end">
+              <Button
+                colorScheme="blue"
+                variant="ghost"
+                onClick={() => navigate(routes.LOG_IN)}
+              >
+                Login to your account
+              </Button>
+              <Button
+                type="submit"
+                minW="10ch"
+                colorScheme="blue"
+                disabled={isSubmitting || isSigningUp}
+                isLoading={isSubmitting || isSigningUp}
+              >
+                Sign up
+              </Button>
+            </Stack>
           </Stack>
-        </Stack>
-      </form>
-    </Center>
+        </form>
+      </Center>
+    </Layout>
   );
 }
 
