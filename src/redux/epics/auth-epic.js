@@ -1,34 +1,20 @@
-import { of } from "rxjs";
-import {
-  map,
-  filter,
-  flatMap,
-  catchError,
-  ignoreElements,
-} from "rxjs/operators";
+import { of, zip } from "rxjs";
+import { catchError, flatMap, ignoreElements, map, tap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { combineEpics, ofType } from "redux-observable";
 import {
   saveToSessionStorage,
   deleteFromSessionStorage,
+  deleteFromLocalStorage,
 } from "../../util/operators/browserStorage";
 import apiConfig from "../../config/api.json";
 import authConfig from "../../config/auth.json";
+import routes from "../../config/routes.json";
 import decodeJwt from "../../util/operators/decodeJwt";
+import { navigate } from "@reach/router";
 import * as actions from "../actions";
 
-/**
- * Saves incoming raw JWT to storage, then decoding it to be
- * stored in state
- */
-const tokenCheckEpic = action$ =>
-  action$.pipe(
-    ofType(actions.auth.tokenCheck.type),
-    saveToSessionStorage(authConfig.AUTH_STORAGE_KEY),
-    decodeJwt(),
-    filter(token => token !== null),
-    map(actions.auth.storeToken)
-  );
+const goTo = dest => tap(() => navigate(dest));
 
 /**
  * Login flow logic
@@ -41,21 +27,29 @@ const loginEpic = action$ =>
   action$.pipe(
     ofType(actions.auth.loginStart.type),
     flatMap(action =>
-      ajax({
-        method: "POST",
-        url: apiConfig.routes.LOG_IN,
-        headers: {
-          "content-type": "application/json",
-          "x-transaction-id": action.payload.transId,
-        },
-        body: JSON.stringify(action.payload),
-      })
+      zip(
+        ajax({
+          method: "POST",
+          url: apiConfig.routes.LOG_IN,
+          headers: {
+            "content-type": "application/json",
+            "x-transaction-id": action.payload.transId,
+          },
+          body: JSON.stringify(action.payload),
+        }),
+        of(action)
+      )
     ),
-    saveToSessionStorage(
-      authConfig.AUTH_STORAGE_KEY,
-      response => response.response.token
-    ),
-    decodeJwt(response => response.response.token),
+    map(([res, action]) => {
+      const { token } = res.response;
+      if (action.payload.rememberMe) {
+        window.localStorage.setItem(authConfig.AUTH_STORAGE_KEY, token);
+      } else {
+        window.sessionStorage.setItem(authConfig.AUTH_STORAGE_KEY, token);
+      }
+      return token;
+    }),
+    decodeJwt(),
     flatMap(token =>
       of(actions.auth.loginSuccess(), actions.auth.storeToken(token))
     ),
@@ -101,19 +95,31 @@ const logoutEpic = action$ =>
   action$.pipe(ofType(actions.auth.logout.type), map(actions.auth.deleteToken));
 
 /**
+ * Token storage handling
+ */
+const storageTokenEpic = action$ =>
+  action$.pipe(
+    ofType(actions.auth.storeToken.type),
+    goTo(routes.INDEX),
+    ignoreElements()
+  );
+
+/**
  * Token deletion handling
  */
 const deleteTokenEpic = action$ =>
   action$.pipe(
     ofType(actions.auth.deleteToken.type),
     deleteFromSessionStorage(authConfig.AUTH_STORAGE_KEY),
+    deleteFromLocalStorage(authConfig.AUTH_STORAGE_KEY),
+    goTo(routes.LOG_IN),
     ignoreElements()
   );
 
 export default combineEpics(
-  tokenCheckEpic,
   loginEpic,
   signupEpic,
   logoutEpic,
+  storageTokenEpic,
   deleteTokenEpic
 );

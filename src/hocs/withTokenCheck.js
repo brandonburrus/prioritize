@@ -1,9 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useState } from "react";
 import useOnMount from "../hooks/useOnMount";
-import { useDispatch, useSelector } from "react-redux";
-import { auth } from "../redux/actions";
-import { useNavigate } from "@reach/router";
+import { useDispatch } from "react-redux";
 import FullpageSpinner from "../components/FullpageSpinner";
+import getUserDetails from "../util/getUserDetails";
+import * as actions from "../redux/actions";
 
 /**
  * HoC to detect if a user has been signed in on the given page component
@@ -11,21 +11,18 @@ import FullpageSpinner from "../components/FullpageSpinner";
 function withTokenCheck(Component) {
   function TokenCheckHOC(props) {
     const dispatch = useDispatch();
-    const userId = useSelector(state => state.auth.userId);
-    const navigate = useNavigate();
+    const [showSpinner, setShowSpinner] = useState(false);
 
     useOnMount(() => {
-      dispatch(auth.tokenCheck());
+      const token = getUserDetails();
+      if (token) {
+        dispatch(actions.auth.storeToken(token));
+      }
+      setShowSpinner(false);
     });
 
-    useEffect(() => {
-      if (userId) {
-        navigate("/");
-      }
-    }, [userId]);
-
     return (
-      <FullpageSpinner if={userId !== null} {...props}>
+      <FullpageSpinner if={showSpinner}>
         <Component {...props} />
       </FullpageSpinner>
     );

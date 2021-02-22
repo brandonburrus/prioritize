@@ -16,6 +16,7 @@ const INIT_STATE = {
     err: null,
   },
   login: {
+    rememberMe: false,
     inflight: false,
     err: null,
   },
@@ -30,8 +31,9 @@ export default createReducer(INIT_STATE, builder => {
       state.name = action.payload.name;
       state.emailVerified = action.payload.emailVerified;
     })
-    .addCase(auth.loginStart, state => {
+    .addCase(auth.loginStart, (state, action) => {
       state.login.inflight = true;
+      state.login.rememberMe = action.payload.rememberMe;
     })
     .addCase(auth.loginSuccess, state => {
       state.login.inflight = false;
@@ -56,5 +58,6 @@ export default createReducer(INIT_STATE, builder => {
       state.profileImg = null;
       state.name = null;
       state.emailVerified = false;
+      state.login.rememberMe = false;
     });
 });

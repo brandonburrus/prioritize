@@ -129,7 +129,7 @@ function Signup() {
             <Button
               colorScheme="blue"
               variant="ghost"
-              onClick={() => navigate(routes.LOGIN)}
+              onClick={() => navigate(routes.LOG_IN)}
             >
               Login to your account
             </Button>

@@ -36,6 +36,13 @@ export const auth = {
 };
 
 /**
+ * Routing actions
+ */
+export const routing = {
+  goTo: action("ROUTING/goToRoute"),
+};
+
+/**
  * Priority actions
  */
 export const priority = {};

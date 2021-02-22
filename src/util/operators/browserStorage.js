@@ -62,7 +62,7 @@ export function deleteFromSessionStorage(sessionStorageKey) {
 export function deleteFromLocalStorage(localStorageKey) {
   return map(value => {
     if (window) {
-      window.sessionStorage.removeItem(localStorageKey);
+      window.localStorage.removeItem(localStorageKey);
     }
     return value;
   });

@@ -1,7 +1,11 @@
-import React, { useEffect } from "react";
-import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "@reach/router";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import FullpageSpinner from "../components/FullpageSpinner";
+import authConfig from "../config/auth.json";
+import useOnMount from "../hooks/useOnMount";
+import getUserDetails from "../util/getUserDetails";
+import * as actions from "../redux/actions";
+import { useNavigate } from "@reach/router";
 import routes from "../config/routes.json";
 
 /**
@@ -11,17 +15,33 @@ import routes from "../config/routes.json";
 function withAuthenticationCheck(Component) {
   function AuthCheckHOC(props) {
     const userId = useSelector(state => state.auth.userId);
-    const location = useLocation();
+    const [showSpinner, setShowSpinner] = useState(false);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
-    useEffect(() => {
-      if (!userId && location !== routes.LOGIN) {
-        setTimeout(() => navigate(routes.LOGIN), 500);
+    useOnMount(() => {
+      if (!userId) {
+        const userToken = getUserDetails();
+        if (userToken && !userId) {
+          dispatch(actions.auth.storeToken(userToken));
+        } else {
+          navigate(routes.LOG_IN);
+        }
       }
-    }, [userId]);
+      const timerId = setInterval(() => {
+        if (
+          !window.localStorage.getItem(authConfig.AUTH_STORAGE_KEY) &&
+          !window.sessionStorage.getItem(authConfig.AUTH_STORAGE_KEY)
+        ) {
+          dispatch(actions.auth.logout());
+        }
+      }, 10000);
+      setShowSpinner(false);
+      return () => clearInterval(timerId);
+    });
 
     return (
-      <FullpageSpinner if={userId === null} {...props}>
+      <FullpageSpinner if={showSpinner}>
         <Component {...props} />
       </FullpageSpinner>
     );

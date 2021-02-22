@@ -3,6 +3,7 @@ import withTokenCheck from "../hocs/withTokenCheck";
 import {
   Button,
   Center,
+  Checkbox,
   Divider,
   FormControl,
   FormErrorMessage,
@@ -49,6 +50,7 @@ function Login() {
     initialValues: {
       email: "",
       password: "",
+      rememberMe: false,
     },
     validationSchema: loginFormSchema,
 
@@ -104,6 +106,17 @@ function Login() {
             />
             <FormErrorMessage>{errors.password}</FormErrorMessage>
           </FormControl>
+          <FormControl isInvalid={errors.rememberMe}>
+            <Checkbox
+              p="2px"
+              name="rememberMe"
+              value={values.rememberMe}
+              onChange={handleChange}
+            >
+              Remember Me
+            </Checkbox>
+          </FormControl>
+          <Divider />
           {loginErr && loginErrMsg && (
             <Text fontSize="sm" color="red.500">
               {loginErrMsg}
