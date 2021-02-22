@@ -3,7 +3,7 @@ const Route = require("route-parser");
 const ROUTE_BASE = "/api";
 
 /**
- * TODO: Add documentation
+ * Top-level routing class that handles all incoming gateway requests
  */
 class Router {
   constructor(route) {

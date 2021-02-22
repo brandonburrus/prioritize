@@ -18,7 +18,8 @@ import decodeJwt from "../../util/operators/decodeJwt";
 import * as actions from "../actions";
 
 /**
- * TODO: Add documentation
+ * Saves incoming raw JWT to storage, then decoding it to be
+ * stored in state
  */
 const tokenCheckEpic = action$ =>
   action$.pipe(
@@ -30,7 +31,11 @@ const tokenCheckEpic = action$ =>
   );
 
 /**
- * TODO: Add documentation
+ * Login flow logic
+ *  1 - Send login ajax reqest
+ *  2 - Save successful request to session storage
+ *  3 - Decode raw JWT
+ *  4 - Send success action + token storage action
  */
 const loginEpic = action$ =>
   action$.pipe(
@@ -58,7 +63,11 @@ const loginEpic = action$ =>
   );
 
 /**
- * TODO: Add documentation
+ * Sign up flow logic
+ *  1 - Send sign up ajax request
+ *  2 - Save successful token to storage
+ *  3 - Decode raw JWT
+ *  4 - Send sign up success action + token storage action
  */
 const signupEpic = action$ =>
   action$.pipe(
@@ -86,13 +95,13 @@ const signupEpic = action$ =>
   );
 
 /**
- * TODO: Add documentation
+ * Log out flow
  */
 const logoutEpic = action$ =>
   action$.pipe(ofType(actions.auth.logout.type), map(actions.auth.deleteToken));
 
 /**
- * TODO: Add documentation
+ * Token deletion handling
  */
 const deleteTokenEpic = action$ =>
   action$.pipe(

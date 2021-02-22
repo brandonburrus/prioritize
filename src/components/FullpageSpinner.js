@@ -2,7 +2,7 @@ import React from "react";
 import { Center, CircularProgress } from "@chakra-ui/react";
 
 /**
- * TODO: Add Documentation
+ * Spinner component that is sized to fit the entire viewport
  */
 function FullpageSpinner({ if: predicateCondition, children }) {
   if (!predicateCondition) {

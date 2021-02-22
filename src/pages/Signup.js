@@ -17,6 +17,7 @@ import { useNavigate } from "@reach/router";
 import { useSelector, useDispatch } from "react-redux";
 import * as Yup from "yup";
 import * as actions from "../redux/actions";
+import routes from "../config/routes.json";
 
 const signupFormSignup = Yup.object().shape({
   email: Yup.string()
@@ -35,7 +36,7 @@ const signupFormSignup = Yup.object().shape({
 });
 
 /**
- * TODO: Add Documentation
+ * Sign up page for users to create a new account on
  */
 function Signup() {
   const isSigningUp = useSelector(state => state.auth.signup.inflight);
@@ -128,7 +129,7 @@ function Signup() {
             <Button
               colorScheme="blue"
               variant="ghost"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate(routes.LOGIN)}
             >
               Login to your account
             </Button>

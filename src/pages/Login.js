@@ -15,6 +15,7 @@ import {
 import { useFormik } from "formik";
 import { useNavigate } from "@reach/router";
 import { useSelector, useDispatch } from "react-redux";
+import routes from "../config/routes.json";
 import * as Yup from "yup";
 import * as actions from "../redux/actions";
 
@@ -26,7 +27,7 @@ const loginFormSchema = Yup.object().shape({
 });
 
 /**
- * TODO: Add Documentation
+ * Login page for returning users
  */
 function Login() {
   const isLoggingIn = useSelector(state => state.auth.login.inflight);
@@ -112,7 +113,7 @@ function Login() {
             <Button
               colorScheme="blue"
               variant="ghost"
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate(routes.SIGN_UP)}
             >
               Create an account
             </Button>

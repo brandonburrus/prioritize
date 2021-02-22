@@ -3,7 +3,10 @@ const routers = require("./routers");
 const { v4: transId } = require("uuid");
 
 /**
- * TODO: Add documentation
+ * Creates the proper response object expected for Netlify functions
+ * from the given input
+ *
+ * Includes logic for handling transaction id mapping
  */
 function responseFactory(res, transId) {
   const { headers = {}, body = {}, ...rest } = res;

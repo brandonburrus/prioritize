@@ -3,7 +3,7 @@ import { tap, map } from "rxjs/operators";
 import { identity } from "ramda";
 
 /**
- * TODO: Add documentation
+ * RxJS operator to save a value to session storage
  */
 export function saveToSessionStorage(sessionStorageKey, mapper = identity) {
   return tap(result => {
@@ -14,7 +14,7 @@ export function saveToSessionStorage(sessionStorageKey, mapper = identity) {
 }
 
 /**
- * TODO: Add documentation
+ * RxJS operator to save a value to local storage
  */
 export function saveToLocalStorage(localStorageKey, mapper = identity) {
   return tap(result => {
@@ -25,7 +25,7 @@ export function saveToLocalStorage(localStorageKey, mapper = identity) {
 }
 
 /**
- * TODO: Add documentation
+ * RxJS operator to retrieve a value from session storage
  */
 export function retrieveFromSessionStorage(sessionStorageKey) {
   if (window) {
@@ -35,7 +35,7 @@ export function retrieveFromSessionStorage(sessionStorageKey) {
 }
 
 /**
- * TODO: Add documentation
+ * RxJS operator to retrieve a value from local storage
  */
 export function retrieveFromLocalStorage(localStorageKey) {
   if (window) {
@@ -45,7 +45,7 @@ export function retrieveFromLocalStorage(localStorageKey) {
 }
 
 /**
- * TODO: Add documentation
+ * RxJS operator to delete a key in session storage
  */
 export function deleteFromSessionStorage(sessionStorageKey) {
   return map(value => {
@@ -57,12 +57,13 @@ export function deleteFromSessionStorage(sessionStorageKey) {
 }
 
 /**
- * TODO: Add documentation
+ * RxJS operator to delete a key in local storage
  */
 export function deleteFromLocalStorage(localStorageKey) {
-  return tap(() => {
+  return map(value => {
     if (window) {
-      window.localStorage.removeItem(localStorageKey);
+      window.sessionStorage.removeItem(localStorageKey);
     }
+    return value;
   });
 }

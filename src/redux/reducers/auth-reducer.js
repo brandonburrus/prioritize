@@ -2,7 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 import { auth } from "../actions";
 
 /**
- * TODO: Add documentation
+ * Auth-related state (login, signup, user details, and logout)
  */
 
 const INIT_STATE = {
@@ -21,9 +21,6 @@ const INIT_STATE = {
   },
 };
 
-/**
- * TODO: Add documentation
- */
 export default createReducer(INIT_STATE, builder => {
   builder
     .addCase(auth.storeToken, (state, action) => {

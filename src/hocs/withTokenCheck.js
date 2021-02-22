@@ -6,7 +6,7 @@ import { useNavigate } from "@reach/router";
 import FullpageSpinner from "../components/FullpageSpinner";
 
 /**
- * TODO: Add documentation
+ * HoC to detect if a user has been signed in on the given page component
  */
 function withTokenCheck(Component) {
   function TokenCheckHOC(props) {
@@ -25,7 +25,7 @@ function withTokenCheck(Component) {
     }, [userId]);
 
     return (
-      <FullpageSpinner if={userId !== null}>
+      <FullpageSpinner if={userId !== null} {...props}>
         <Component {...props} />
       </FullpageSpinner>
     );
