@@ -1,22 +1,23 @@
-import { combineEpics, ofType } from "redux-observable";
 import { of } from "rxjs";
-import { map, filter, tap, flatMap } from "rxjs/operators";
+import { map, filter, flatMap, catchError } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
-import authConfig from "../../config/auth.json";
+import { combineEpics, ofType } from "redux-observable";
+import { saveToSessionStorage } from "../../util/operators/browserStorage";
 import apiConfig from "../../config/api.json";
-import { auth } from "../actions";
-import jwt from "jsonwebtoken";
+import authConfig from "../../config/auth.json";
+import decodeJwt from "../../util/operators/jwtDecode";
+import * as actions from "../actions";
 
 /**
  * TODO: Add documentation
  */
 const tokenCheckEpic = action$ =>
   action$.pipe(
-    ofType(auth.tokenCheck.type),
-    map(() => localStorage.getItem(authConfig.localStorageKey)),
-    map(jwt.decode),
+    ofType(actions.auth.tokenCheck.type),
+    saveToSessionStorage(authConfig.AUTH_STORAGE_KEY),
+    decodeJwt(),
     filter(token => token !== null),
-    map(auth.storeToken)
+    map(actions.auth.storeToken)
   );
 
 /**
@@ -24,7 +25,7 @@ const tokenCheckEpic = action$ =>
  */
 const loginEpic = action$ =>
   action$.pipe(
-    ofType(auth.loginStart.type),
+    ofType(actions.auth.loginStart.type),
     flatMap(action =>
       ajax({
         method: "POST",
@@ -36,14 +37,15 @@ const loginEpic = action$ =>
         body: JSON.stringify(action.payload),
       })
     ),
-    tap(ajaxResult =>
-      localStorage.setItem(
-        authConfig.localStorageKey,
-        ajaxResult.response.token
-      )
+    saveToSessionStorage(
+      authConfig.AUTH_STORAGE_KEY,
+      response => response.response.token
     ),
-    map(ajaxResult => jwt.decode(ajaxResult.response.token)),
-    flatMap(token => of(auth.loginSuccess(), auth.storeToken(token)))
+    decodeJwt(response => response.response.token),
+    flatMap(token =>
+      of(actions.auth.loginSuccess(), actions.auth.storeToken(token))
+    ),
+    catchError(err => of(actions.auth.loginFail({ err })))
   );
 
 export default combineEpics(tokenCheckEpic, loginEpic);

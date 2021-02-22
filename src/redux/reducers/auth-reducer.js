@@ -8,8 +8,17 @@ import { auth } from "../actions";
 const INIT_STATE = {
   userId: null,
   email: null,
-  loginInflight: false,
-  signupInflight: false,
+  profileImg: null,
+  name: null,
+  emailVerified: false,
+  signup: {
+    inflight: false,
+    err: null,
+  },
+  login: {
+    inflight: false,
+    err: null,
+  },
 };
 
 /**
@@ -17,19 +26,22 @@ const INIT_STATE = {
  */
 export default createReducer(INIT_STATE, builder => {
   builder
-    .addCase(auth.storeToken, (_state, action) => {
-      return {
-        userId: action.payload.userId,
-        email: action.payload.email,
-      };
+    .addCase(auth.storeToken, (state, action) => {
+      console.log(action);
+      state.userId = action.payload.userId;
+      state.email = action.payload.email;
+      state.profileImg = action.payload.img;
+      state.name = action.payload.name;
+      state.emailVerified = action.payload.emailVerified;
     })
     .addCase(auth.loginStart, state => {
-      state.loginInflight = true;
+      state.login.inflight = true;
     })
     .addCase(auth.loginSuccess, state => {
-      state.loginInflight = false;
+      state.login.inflight = false;
     })
-    .addCase(auth.loginFail, state => {
-      state.loginInflight = false;
+    .addCase(auth.loginFail, (state, action) => {
+      state.login.inflight = false;
+      state.login.err = action.payload.err;
     });
 });

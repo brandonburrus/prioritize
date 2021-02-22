@@ -5,7 +5,7 @@
 
 [dev]
   framework = "#custom"
-  command = "parcel serve ./public/index.html -p 3001"
+  command = "yarn parcel"
   publish = "public"
   targetPort = 3001
   port = 3000
@@ -14,8 +14,10 @@
   from = "/api/*"
   to = "/.netlify/functions/gateway/:splat"
   status = 200
+  force = true
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  force = false

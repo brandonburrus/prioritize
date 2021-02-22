@@ -6,7 +6,7 @@ import { v4 as id } from "uuid";
  * transaction id on any payload
  */
 const action = actionName =>
-  createAction(Symbol(actionName), payloadInput => ({
+  createAction(actionName, payloadInput => ({
     payload: {
       transId: id(),
       ...(typeof payloadInput !== "undefined"

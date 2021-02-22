@@ -8,9 +8,10 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "netlify dev",
-    "clean": "rimraf .cache build",
     "build": "npx parcel build public/index.html --out-dir build --log-level 4",
+    "clean": "rimraf .cache build",
+    "dev": "netlify dev",
+    "parcel": "parcel public/index.html --port 3001",
     "lint": "prettier --check src && eslint --fix"
   },
   "dependencies": {
