@@ -1,5 +1,5 @@
 import { of } from "rxjs";
-import { tap } from "rxjs/operators";
+import { tap, map } from "rxjs/operators";
 import { identity } from "ramda";
 
 /**
@@ -42,4 +42,27 @@ export function retrieveFromLocalStorage(localStorageKey) {
     return of(window.localStorage.getItem(localStorageKey));
   }
   return of(null);
+}
+
+/**
+ * TODO: Add documentation
+ */
+export function deleteFromSessionStorage(sessionStorageKey) {
+  return map(value => {
+    if (window) {
+      window.sessionStorage.removeItem(sessionStorageKey);
+    }
+    return value;
+  });
+}
+
+/**
+ * TODO: Add documentation
+ */
+export function deleteFromLocalStorage(localStorageKey) {
+  return tap(() => {
+    if (window) {
+      window.localStorage.removeItem(localStorageKey);
+    }
+  });
 }

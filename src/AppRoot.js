@@ -5,6 +5,7 @@ import { Router } from "@reach/router";
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
 import Login from "./pages/Login";
+import NotFound from "./pages/NotFound";
 
 /**
  * Root app component
@@ -14,8 +15,9 @@ function App() {
     <ChakraProvider theme={extendTheme(theme)}>
       <Router>
         <Home path="/" />
-        <Signup path="signup" />
-        <Login path="login" />
+        <Signup path="/signup" />
+        <Login path="/login" />
+        <NotFound default />
       </Router>
     </ChakraProvider>
   );

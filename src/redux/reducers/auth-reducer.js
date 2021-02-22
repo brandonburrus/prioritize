@@ -52,5 +52,12 @@ export default createReducer(INIT_STATE, builder => {
     .addCase(auth.signupFail, (state, action) => {
       state.signup.inflight = false;
       state.signup.err = action.payload.err;
+    })
+    .addCase(auth.logout, state => {
+      state.userId = null;
+      state.email = null;
+      state.profileImg = null;
+      state.name = null;
+      state.emailVerified = false;
     });
 });

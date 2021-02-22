@@ -10,8 +10,8 @@ function withAuthenticationCheck(Component) {
     const navigate = useNavigate();
 
     useEffect(() => {
-      if (!userId && location !== "/signup") {
-        setTimeout(() => navigate("/signup"), 500);
+      if (!userId && location !== "/login") {
+        setTimeout(() => navigate("/login"), 500);
       }
     }, [userId]);
 

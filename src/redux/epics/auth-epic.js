@@ -1,8 +1,17 @@
 import { of } from "rxjs";
-import { map, filter, flatMap, catchError, tap } from "rxjs/operators";
+import {
+  map,
+  filter,
+  flatMap,
+  catchError,
+  ignoreElements,
+} from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { combineEpics, ofType } from "redux-observable";
-import { saveToSessionStorage } from "../../util/operators/browserStorage";
+import {
+  saveToSessionStorage,
+  deleteFromSessionStorage,
+} from "../../util/operators/browserStorage";
 import apiConfig from "../../config/api.json";
 import authConfig from "../../config/auth.json";
 import decodeJwt from "../../util/operators/decodeJwt";
@@ -76,4 +85,26 @@ const signupEpic = action$ =>
     catchError(err => of(actions.auth.signupFail({ err })))
   );
 
-export default combineEpics(tokenCheckEpic, loginEpic, signupEpic);
+/**
+ * TODO: Add documentation
+ */
+const logoutEpic = action$ =>
+  action$.pipe(ofType(actions.auth.logout.type), map(actions.auth.deleteToken));
+
+/**
+ * TODO: Add documentation
+ */
+const deleteTokenEpic = action$ =>
+  action$.pipe(
+    ofType(actions.auth.deleteToken.type),
+    deleteFromSessionStorage(authConfig.AUTH_STORAGE_KEY),
+    ignoreElements()
+  );
+
+export default combineEpics(
+  tokenCheckEpic,
+  loginEpic,
+  signupEpic,
+  logoutEpic,
+  deleteTokenEpic
+);
