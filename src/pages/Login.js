@@ -12,11 +12,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useNavigate } from "@reach/router";
 import { useSelector, useDispatch } from "react-redux";
-import { auth } from "../redux/actions";
+import * as Yup from "yup";
+import * as actions from "../redux/actions";
 
 const loginFormSchema = Yup.object().shape({
   email: Yup.string()
@@ -52,7 +52,7 @@ function Login() {
     validationSchema: loginFormSchema,
 
     onSubmit(payload, submission) {
-      dispatch(auth.loginStart(payload));
+      dispatch(actions.auth.loginStart(payload));
       submission.setSubmitting(false);
     },
   });
@@ -71,8 +71,7 @@ function Login() {
           borderRadius="20px"
           border="1px solid"
           borderColor="gray.200"
-          minW="20ch"
-          maxW="60ch"
+          minW="40ch"
           spacing="12px"
           p="24px"
         >
@@ -109,7 +108,7 @@ function Login() {
               {loginErrMsg}
             </Text>
           )}
-          <Stack direction="row">
+          <Stack direction="row" justify="flex-end">
             <Button
               colorScheme="blue"
               variant="ghost"

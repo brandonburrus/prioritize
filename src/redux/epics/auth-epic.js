@@ -1,11 +1,11 @@
 import { of } from "rxjs";
-import { map, filter, flatMap, catchError } from "rxjs/operators";
+import { map, filter, flatMap, catchError, tap } from "rxjs/operators";
 import { ajax } from "rxjs/ajax";
 import { combineEpics, ofType } from "redux-observable";
 import { saveToSessionStorage } from "../../util/operators/browserStorage";
 import apiConfig from "../../config/api.json";
 import authConfig from "../../config/auth.json";
-import decodeJwt from "../../util/operators/jwtDecode";
+import decodeJwt from "../../util/operators/decodeJwt";
 import * as actions from "../actions";
 
 /**
@@ -48,4 +48,32 @@ const loginEpic = action$ =>
     catchError(err => of(actions.auth.loginFail({ err })))
   );
 
-export default combineEpics(tokenCheckEpic, loginEpic);
+/**
+ * TODO: Add documentation
+ */
+const signupEpic = action$ =>
+  action$.pipe(
+    ofType(actions.auth.signupStart.type),
+    flatMap(action =>
+      ajax({
+        method: "POST",
+        url: apiConfig.routes.SIGN_UP,
+        headers: {
+          "content-type": "application/json",
+          "x-transaction-id": action.payload.transId,
+        },
+        body: JSON.stringify(action.payload),
+      })
+    ),
+    saveToSessionStorage(
+      authConfig.AUTH_STORAGE_KEY,
+      response => response.response.token
+    ),
+    decodeJwt(response => response.response.token),
+    flatMap(token =>
+      of(actions.auth.signupSuccess(), actions.auth.storeToken(token))
+    ),
+    catchError(err => of(actions.auth.signupFail({ err })))
+  );
+
+export default combineEpics(tokenCheckEpic, loginEpic, signupEpic);

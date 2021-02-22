@@ -1,6 +1,6 @@
 {
   "routes": {
-    "SIGN_IN": "/api/auth/signin",
+    "SIGN_UP": "/api/auth/signup",
     "LOG_IN": "/api/auth/login"
   }
 }

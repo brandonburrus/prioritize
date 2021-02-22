@@ -27,7 +27,6 @@ const INIT_STATE = {
 export default createReducer(INIT_STATE, builder => {
   builder
     .addCase(auth.storeToken, (state, action) => {
-      console.log(action);
       state.userId = action.payload.userId;
       state.email = action.payload.email;
       state.profileImg = action.payload.img;
@@ -43,5 +42,15 @@ export default createReducer(INIT_STATE, builder => {
     .addCase(auth.loginFail, (state, action) => {
       state.login.inflight = false;
       state.login.err = action.payload.err;
+    })
+    .addCase(auth.signupStart, state => {
+      state.signup.inflight = true;
+    })
+    .addCase(auth.signupSuccess, state => {
+      state.signup.inflight = false;
+    })
+    .addCase(auth.signupFail, (state, action) => {
+      state.signup.inflight = false;
+      state.signup.err = action.payload.err;
     });
 });
